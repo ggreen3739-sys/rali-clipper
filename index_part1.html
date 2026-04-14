@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rali-Clipper v0.01</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="device">
+
+<!-- ═══════════════════════════════════════
+     LIVE SIDE
+═══════════════════════════════════════ -->
+
+<!-- WELCOME -->
+<div class="screen active" id="s-welcome" style="background:#f0f0f0;">
+  <div style="background:#2c5f9e;padding:16px;text-align:center;flex-shrink:0;">
+    <div style="font-size:30px;font-weight:700;color:#fff;">Rali-Clipper</div>
+    <div style="font-size:12px;color:#b8d0f0;margin-top:2px;">Preservation ticketing system</div>
+    <div style="font-size:26px;font-weight:500;color:#fff;margin-top:10px;" id="w-time">--:--:--</div>
+    <div style="font-size:15px;color:#b8d0f0;margin-top:2px;" id="w-date">--/--/----</div>
+  </div>
+  <div style="flex:1;padding:12px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;">
+    <div style="background:#fff;border:1.5px solid #ddd;border-radius:12px;padding:12px 16px;text-align:center;">
+      <div style="font-size:11px;color:#888;margin-bottom:4px;">London, UK</div>
+      <div style="font-size:32px;font-weight:500;color:#2c5f9e;" id="wtemp">--°C</div>
+      <div style="font-size:13px;color:#444;margin-top:3px;" id="wdesc">Loading...</div>
+      <div style="display:flex;justify-content:space-around;margin-top:8px;">
+        <div style="text-align:center;"><div style="font-size:10px;color:#888;">Feels like</div><div style="font-size:13px;font-weight:500;color:#333;" id="wfeel">--</div></div>
+        <div style="text-align:center;"><div style="font-size:10px;color:#888;">Wind</div><div style="font-size:13px;font-weight:500;color:#333;" id="wwind">--</div></div>
+        <div style="text-align:center;"><div style="font-size:10px;color:#888;">Humidity</div><div style="font-size:13px;font-weight:500;color:#333;" id="whum">--</div></div>
+      </div>
+    </div>
+    <div style="background:#2c5f9e;border-radius:12px;padding:16px;text-align:center;cursor:pointer;" onclick="go('s-drivernum')">
+      <div style="font-size:18px;font-weight:700;color:#fff;">Ready to clip? Let's go!</div>
+    </div>
+    <div style="background:#fff;border:1.5px solid #ccc;border-radius:12px;padding:14px;text-align:center;opacity:0.5;">
+      <div style="font-size:14px;font-weight:500;color:#555;">Shutdown</div>
+    </div>
+    <div style="background:#fff;border:1.5px solid #f5c6c6;border-radius:12px;padding:14px;text-align:center;opacity:0.5;">
+      <div style="font-size:14px;font-weight:500;color:#c0392b;">Close app</div>
+    </div>
+    <div style="font-size:11px;color:#aaa;text-align:center;padding:2px 0;">v0.01</div>
+    <div style="background:#1a1a2e;border-radius:12px;padding:14px;text-align:center;cursor:pointer;" onclick="editorEntry()">
+      <div style="font-size:14px;font-weight:600;color:#7b8cde;">Manage and edit</div>
+      <div style="font-size:11px;color:#8888aa;margin-top:2px;">Manage routes, vehicles &amp; settings</div>
+    </div>
+  </div>
+  <div class="sbar">
+    <div class="brand">Rali-Clipper</div>
+    <div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div>
+    <div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div>
+    <div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div>
+    <div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div>
+  </div>
+</div>
+
+<!-- DRIVER NUMBER -->
+<div class="screen" id="s-drivernum" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div class="lbl">Step 1 of 2</div><div class="val">Enter driver number</div></div>
+  <div class="npwrap">
+    <div class="ndisp" id="dn-disp"><span class="ph">Driver number</span></div>
+    <div class="npgrid">
+      <button onclick="np('dn','1')">1</button><button onclick="np('dn','2')">2</button><button onclick="np('dn','3')">3</button>
+      <button onclick="np('dn','4')">4</button><button onclick="np('dn','5')">5</button><button onclick="np('dn','6')">6</button>
+      <button onclick="np('dn','7')">7</button><button onclick="np('dn','8')">8</button><button onclick="np('dn','9')">9</button>
+      <button class="del" onclick="np('dn','back')">⌫</button><button onclick="np('dn','0')">0</button>
+      <button class="go" onclick="if(dnV.length>0)go('s-driverpin')">Next →</button>
+    </div>
+  </div>
+  <button class="btn-back-live" onclick="go('s-welcome')">← Back</button>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- DRIVER PIN -->
+<div class="screen" id="s-driverpin" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div class="lbl">Step 2 of 2</div><div class="val">Enter PIN</div></div>
+  <div class="npwrap">
+    <div class="ndisp" id="dp-disp"><span class="ph">PIN</span></div>
+    <div class="npgrid">
+      <button onclick="np('dp','1')">1</button><button onclick="np('dp','2')">2</button><button onclick="np('dp','3')">3</button>
+      <button onclick="np('dp','4')">4</button><button onclick="np('dp','5')">5</button><button onclick="np('dp','6')">6</button>
+      <button onclick="np('dp','7')">7</button><button onclick="np('dp','8')">8</button><button onclick="np('dp','9')">9</button>
+      <button class="del" onclick="np('dp','back')">⌫</button><button onclick="np('dp','0')">0</button>
+      <button class="go" onclick="pinNext()">Next →</button>
+    </div>
+  </div>
+  <button class="btn-back-live" onclick="go('s-drivernum')">← Back</button>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- VEHICLE -->
+<div class="screen" id="s-vehicle" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div class="val">Select vehicle</div></div>
+  <div style="padding:10px 14px 6px;flex-shrink:0;"><input type="text" placeholder="Search fleet, make or reg..." id="vsearch" oninput="filterV()" style="width:100%;border:1.5px solid #ccc;border-radius:8px;padding:9px 12px;font-size:13px;outline:none;"/></div>
+  <div class="lscroll" id="vlist"></div>
+  <button onclick="showModal('adhoc-modal')" style="margin:8px 14px 4px;background:#fff;border:1.5px dashed #2c5f9e;border-radius:8px;padding:13px;font-size:13px;color:#2c5f9e;cursor:pointer;display:block;text-align:center;flex-shrink:0;">+ Ad-hoc vehicle</button>
+  <button class="btn-back-live" onclick="go('s-driverpin')">← Back</button>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- DUTY -->
+<div class="screen" id="s-duty" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div class="val">Select duty / running board</div></div>
+  <div class="lscroll">
+    <div class="slbl">Available duties</div>
+    <div class="li" onclick="setDuty(true);go('s-trip')"><div><div class="ln">Duty 101 – Morning shift</div><div class="ls">Driver duty · Routes 45, 46, 47</div></div><div class="la">›</div></div>
+    <div class="li" onclick="setDuty(true);go('s-trip')"><div><div class="ln">Duty 204 – Afternoon shift</div><div class="ls">Driver duty · Routes 45, 48</div></div><div class="la">›</div></div>
+    <div class="slbl">Available running boards</div>
+    <div class="li" onclick="setDuty(true);go('s-trip')"><div><div class="ln">Running board 310 – Rally special</div><div class="ls">Bus running board · Rally route</div></div><div class="la">›</div></div>
+  </div>
+  <button onclick="setDuty(false);go('s-route')" style="margin:8px 14px 4px;background:#fff;border:1.5px dashed #2c5f9e;border-radius:8px;padding:13px;font-size:13px;color:#2c5f9e;cursor:pointer;display:block;text-align:center;flex-shrink:0;">Ad-hoc (skip to route selection)</button>
+  <button class="btn-back-live" onclick="go('s-vehicle')">← Back</button>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- TRIP LIST -->
+<div class="screen" id="s-trip" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div style="font-size:10px;color:#b8d0f0;">Duty 101 – Morning shift</div><div class="val">Select trip / event</div></div>
+  <div class="lscroll">
+    <div class="slbl">Scheduled events</div>
+    <div class="li dead" onclick="go('s-deadrun')"><div><div class="ln" style="color:#c0392b;">Dead run – Depot to Bus Station</div><div class="ls">Not in service · 08:00</div></div><div class="la" style="color:#c0392b;">›</div></div>
+    <div class="li" onclick="setTrip('45','Town Centre','Bus Station','Inbound');go('s-main')"><div><div class="ln">Trip 1 – Route 45 Inbound</div><div class="ls">Town Centre → Bus Station · 08:15</div></div><div class="la">›</div></div>
+    <div class="li" onclick="setTrip('45','Bus Station','Town Centre','Outbound');go('s-main')"><div><div class="ln">Trip 2 – Route 45 Outbound</div><div class="ls">Bus Station → Town Centre · 09:30</div></div><div class="la">›</div></div>
+    <div class="li brk" onclick="go('s-break')"><div><div class="ln" style="color:#1e8449;">Break – 30 minutes</div><div class="ls">Driver break · 10:45</div></div><div class="la" style="color:#1e8449;">›</div></div>
+    <div class="li" onclick="setTrip('46','Town Centre','Park &amp; Ride','Outbound');go('s-main')"><div><div class="ln">Trip 3 – Route 46 Outbound</div><div class="ls">Town Centre → Park &amp; Ride · 11:20</div></div><div class="la">›</div></div>
+  </div>
+  <button class="btn-back-live" onclick="go('s-duty')">← Back</button>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- ROUTE (ad-hoc) -->
+<div class="screen" id="s-route" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div class="val">Select route</div></div>
+  <div class="lscroll">
+    <div class="slbl">Default</div>
+    <div class="li" onclick="go('s-direction')"><div><div class="ln">Rally route</div><div class="ls">Generic rally service</div></div><div class="la">›</div></div>
+    <div class="slbl">Preset routes</div>
+    <div class="li" onclick="go('s-direction')"><div><div class="ln">Route 45</div><div class="ls">Town Centre – Bus Station</div></div><div class="la">›</div></div>
+    <div class="li" onclick="go('s-direction')"><div><div class="ln">Route 46</div><div class="ls">High Street – Park &amp; Ride</div></div><div class="la">›</div></div>
+  </div>
+  <button class="btn-back-live" onclick="go('s-duty')">← Back</button>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- DIRECTION -->
+<div class="screen" id="s-direction" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div style="font-size:10px;color:#b8d0f0;">Route 45 – ad-hoc</div><div class="val">Select direction</div></div>
+  <div class="lscroll">
+    <div class="slbl">Direction</div>
+    <div class="li" onclick="setTrip('45','Town Centre','Bus Station','Inbound');go('s-main')"><div><div class="ln">Inbound</div><div class="ls">Town Centre → Bus Station</div></div><div class="la">›</div></div>
+    <div class="li" onclick="setTrip('45','Bus Station','Town Centre','Outbound');go('s-main')"><div><div class="ln">Outbound</div><div class="ls">Bus Station → Town Centre</div></div><div class="la">›</div></div>
+    <div class="slbl">Other directions</div>
+    <div class="li" onclick="setTrip('45','','','Northbound');go('s-main')"><div><div class="ln">Northbound</div></div><div class="la">›</div></div>
+    <div class="li" onclick="setTrip('45','','','Southbound');go('s-main')"><div><div class="ln">Southbound</div></div><div class="la">›</div></div>
+    <div class="li" onclick="setTrip('45','','','Clockwise');go('s-main')"><div><div class="ln">Clockwise</div></div><div class="la">›</div></div>
+    <div class="li" onclick="setTrip('45','','','Anticlockwise');go('s-main')"><div><div class="ln">Anticlockwise</div></div><div class="la">›</div></div>
+  </div>
+  <button class="btn-back-live" onclick="go('s-route')">← Back</button>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- MAIN TICKET SCREEN -->
+<div class="screen" id="s-main" style="background:#e4e4e4;">
+  <div class="fare-row">
+    <button class="fb" onclick="stepFs(-1)">‹</button>
+    <div class="fm" onclick="showFsList('current')"><div class="fl">Current fare stage</div><div class="fv" id="m-from">Town Centre</div></div>
+    <button class="fb" onclick="stepFs(1)">›</button>
+  </div>
+  <div class="stop-row">
+    <button class="sb2" onclick="stepStop(-1)">‹</button>
+    <div class="sm" onclick="showStopList()"><div class="sl">Current stop</div><div class="sv" id="m-stop">High Street</div></div>
+    <button class="sb2" onclick="stepStop(1)">›</button>
+  </div>
+  <div class="fare-row">
+    <button class="fb" onclick="stepDest(-1)">‹</button>
+    <div class="fm" onclick="showFsList('dest')"><div class="fl">Destination fare stage</div><div class="fv" id="m-to">Bus Station</div></div>
+    <button class="fb" onclick="stepDest(1)">›</button>
+  </div>
+  <div class="tbar"><button>PUNCH</button><button>VOID</button><button>STACK</button><button>CALC</button></div>
+  <div class="tabs"><div class="tab on">Donations</div><div class="tab">Dummy</div><div class="tab">Passes</div><div class="tab">Other</div></div>
+  <div class="tgrid">
+    <div class="tbox" ontouchstart="startLongPress(this,0)" ontouchend="cancelLongPress()" onmousedown="startLongPress(this,0)" onmouseup="cancelLongPress()" onmouseleave="cancelLongPress()">
+      <div class="tn">Adult donation</div>
+      <div class="qr"><button class="qm" onclick="adj(0,-1)">−</button><span class="qv" id="qv0">0</span><button class="qp" onclick="adj(0,1)">+</button></div>
+      <div class="tp">£2.00</div>
+    </div>
+    <div class="tbox" ontouchstart="startLongPress(this,1)" ontouchend="cancelLongPress()" onmousedown="startLongPress(this,1)" onmouseup="cancelLongPress()" onmouseleave="cancelLongPress()">
+      <div class="tn">Child donation</div>
+      <div class="qr"><button class="qm" onclick="adj(1,-1)">−</button><span class="qv" id="qv1">0</span><button class="qp" onclick="adj(1,1)">+</button></div>
+      <div class="tp">£1.00</div>
+    </div>
+    <div class="tbox" ontouchstart="startLongPress(this,2)" ontouchend="cancelLongPress()" onmousedown="startLongPress(this,2)" onmouseup="cancelLongPress()" onmouseleave="cancelLongPress()">
+      <div class="tn">Family donation</div>
+      <div class="qr"><button class="qm" onclick="adj(2,-1)">−</button><span class="qv" id="qv2">0</span><button class="qp" onclick="adj(2,1)">+</button></div>
+      <div class="tp">£5.00</div>
+    </div>
+    <div class="tbox" ontouchstart="startLongPress(this,3)" ontouchend="cancelLongPress()" onmousedown="startLongPress(this,3)" onmouseup="cancelLongPress()" onmouseleave="cancelLongPress()">
+      <div class="tn">Custom amount</div>
+      <div class="qr"><button class="qm" onclick="adj(3,-1)">−</button><span class="qv" id="qv3">0</span><button class="qp" onclick="adj(3,1)">+</button></div>
+      <div class="tp">Enter amt</div>
+    </div>
+  </div>
+  <div class="tripinfo">
+    <div class="routenum" id="m-route">45</div>
+    <div class="ti-details">
+      <div class="ti-row">
+        <div class="ti-item"><div class="ti-lbl">Trip no.</div><div class="ti-val">T1</div></div>
+        <div class="ti-item"><div class="ti-lbl">From</div><div class="ti-val" id="ti-from">Town Centre</div></div>
+        <div class="ti-item"><div class="ti-lbl">Direction</div><div class="ti-val" id="ti-dir">Inbound</div></div>
+      </div>
+      <div class="ti-row">
+        <div class="ti-item"><div class="ti-lbl">Start time</div><div class="ti-val">08:15</div></div>
+        <div class="ti-item"><div class="ti-lbl">To</div><div class="ti-val" id="ti-to">Bus Station</div></div>
+        <div class="ti-item"><div class="ti-lbl">Total pax</div><div class="ti-val pax-green" id="tpax">0</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="irow">
+    <button class="ism" onclick="go('s-settings')">Settings<br>&amp; More</button>
+    <button class="iiss" id="issue-btn" onclick="handleIssueBtn()">Issue ticket</button>
+    <div class="ick" onclick="go('s-drive')"><div class="ct" id="m-clock">--:--:--</div><div class="cd" id="m-date">--/--/----</div></div>
+  </div>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="screen" id="s-settings" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div class="val">Settings &amp; More</div></div>
+  <div class="lscroll">
+    <div class="slbl">Trip options</div>
+    <div class="sitem" id="next-trip-item" onclick="if(hasDuty)go('s-main')"><div><div class="sn">Start next scheduled trip</div><div class="ss" id="ntsub">Ends current trip, begins next in duty</div></div><div class="sa">›</div></div>
+    <div class="sitem" onclick="go('s-route')"><div><div class="sn">Start ad-hoc trip</div><div class="ss">End current trip, select route manually</div></div><div class="sa">›</div></div>
+    <div class="slbl">Display</div>
+    <div class="sitem" onclick="go('s-brightness')"><div><div class="sn">Brightness &amp; theme</div><div class="ss">Adjust brightness, switch dark mode</div></div><div class="sa">›</div></div>
+    <div class="slbl">Tools</div>
+    <div class="sitem" onclick="showModal('tp-modal')"><div><div class="sn">Test print</div><div class="ss">Print a test ticket to check printer</div></div><div class="sa">›</div></div>
+    <div class="slbl">Session</div>
+    <div class="sitem" onclick="go('s-drivernum')"><div><div class="sn" style="color:#c0392b;">Log off</div><div class="ss">Return to driver login</div></div><div class="sa" style="color:#c0392b;">›</div></div>
+  </div>
+  <button class="btn-boxed-back" onclick="go('s-main')">← Back to ticketing</button>
+  <div style="height:8px;flex-shrink:0;"></div>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- BRIGHTNESS -->
+<div class="screen" id="s-brightness" style="background:#f0f0f0;">
+  <div class="blue-hdr"><div class="val">Brightness &amp; theme</div></div>
+  <div style="flex:1;padding:14px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;">
+    <div style="background:#fff;border:1.5px solid #ccc;border-radius:12px;padding:16px;">
+      <div style="font-size:13px;font-weight:500;color:#333;margin-bottom:12px;">Screen brightness</div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:14px;color:#bbb;">☀</span><input type="range" min="20" max="100" value="80" style="flex:1;" oninput="document.getElementById('bval').textContent=this.value+'%'"/><span style="font-size:18px;color:#f0a500;">☀</span></div>
+      <div style="text-align:center;font-size:12px;color:#888;margin-top:6px;" id="bval">80%</div>
+    </div>
+    <div style="background:#fff;border:1.5px solid #ccc;border-radius:12px;padding:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;">
+        <div><div style="font-size:14px;font-weight:500;color:#222;">Dark mode</div><div style="font-size:12px;color:#888;margin-top:2px;">Switch to dark theme</div></div>
+        <div class="tog" onclick="this.classList.toggle('on')"><div class="kn"></div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
+        <div><div style="font-size:14px;font-weight:500;color:#222;">Auto-brightness</div><div style="font-size:12px;color:#888;margin-top:2px;">Adjust based on ambient light</div></div>
+        <div class="tog on" onclick="this.classList.toggle('on')"><div class="kn"></div></div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-boxed-back" onclick="go('s-settings')">← Back to settings</button>
+  <div style="height:8px;flex-shrink:0;"></div>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- DEAD RUN -->
+<div class="screen" id="s-deadrun" style="background:#fff8f0;">
+  <div style="background:#c0392b;padding:14px 16px;text-align:center;flex-shrink:0;"><div style="font-size:18px;font-weight:700;color:#fff;">Dead run in progress</div><div style="font-size:12px;color:#f5b7b1;margin-top:4px;">Not in service</div></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px;">
+    <div style="font-size:52px;font-weight:700;color:#c0392b;line-height:1;" id="dr-clock">--:--</div>
+    <div style="font-size:14px;color:#888;" id="dr-date">--/--/----</div>
+    <div style="width:100%;display:flex;flex-direction:column;gap:10px;">
+      <div style="background:#fdecea;border:1.5px solid #f5c6c6;border-radius:10px;padding:14px 16px;"><div style="font-size:10px;color:#c0392b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">From</div><div style="font-size:16px;font-weight:600;color:#333;">Depot</div></div>
+      <div style="background:#fdecea;border:1.5px solid #f5c6c6;border-radius:10px;padding:14px 16px;"><div style="font-size:10px;color:#c0392b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">To</div><div style="font-size:16px;font-weight:600;color:#333;">Bus Station</div></div>
+      <div style="background:#fdecea;border:1.5px solid #f5c6c6;border-radius:10px;padding:14px 16px;"><div style="font-size:10px;color:#c0392b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Donation target progress</div><div style="display:flex;align-items:center;gap:10px;margin-top:4px;"><div style="flex:1;background:#f5c6c6;border-radius:4px;height:10px;overflow:hidden;"><div style="width:62%;background:#c0392b;height:100%;border-radius:4px;"></div></div><div style="font-size:14px;font-weight:600;color:#c0392b;">62%</div></div></div>
+    </div>
+  </div>
+  <button class="btn-boxed-back" style="border-color:#c0392b;color:#c0392b;" onclick="go('s-trip')">End dead run</button>
+  <div style="height:8px;flex-shrink:0;"></div>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- BREAK -->
+<div class="screen" id="s-break" style="background:#f0fff4;">
+  <div style="background:#1e8449;padding:14px 16px;text-align:center;flex-shrink:0;"><div style="font-size:18px;font-weight:700;color:#fff;">Driver on break</div><div style="font-size:12px;color:#a9dfbf;margin-top:4px;">30 minutes scheduled</div></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px;">
+    <div style="font-size:52px;font-weight:700;color:#1e8449;line-height:1;" id="brk-clock">--:--</div>
+    <div style="font-size:14px;color:#888;" id="brk-date">--/--/----</div>
+    <div style="background:#d5f5e3;border:1.5px solid #a9dfbf;border-radius:12px;padding:20px;width:100%;text-align:center;">
+      <div style="font-size:14px;color:#1e8449;font-weight:500;">Next scheduled event</div>
+      <div style="font-size:16px;font-weight:700;color:#333;margin-top:6px;">Trip 3 – Route 46 Outbound</div>
+      <div style="font-size:13px;color:#666;margin-top:2px;">Departs 11:20</div>
+    </div>
+  </div>
+  <button class="btn-boxed-back" style="border-color:#1e8449;color:#1e8449;" onclick="go('s-trip')">End break</button>
+  <div style="height:8px;flex-shrink:0;"></div>
+  <div class="sbar"><div class="brand">Rali-Clipper</div><div class="spill"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#4caf50" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="#4caf50" stroke-width="1.2"/><line x1="1.5" y1="7" x2="12.5" y2="7" stroke="#4caf50" stroke-width="1.2"/></svg><span style="color:#4caf50;">GPS</span></div><div class="spill"><svg width="15" height="10" viewBox="0 0 16 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#4caf50" stroke-width="1.2"/><line x1="0" y1="3.5" x2="16" y2="3.5" stroke="#4caf50" stroke-width="1.5"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">87%</span></div></div><div class="spill"><svg width="14" height="13" viewBox="0 0 15 13" fill="none"><rect x="1" y="4" width="13" height="7" rx="1.4" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="1" width="9" height="4" rx="0.8" stroke="#4caf50" stroke-width="1.1"/><rect x="3.5" y="7.5" width="8" height="1.2" rx="0.4" fill="#4caf50"/></svg><div class="s2"><span style="font-size:9px;color:#4caf50;">Connected</span><span style="font-size:9px;color:#aaa;">91%</span></div></div><div class="spill mla"><svg width="17" height="11" viewBox="0 0 18 11" fill="none"><rect x="0.6" y="0.6" width="14.8" height="9.8" rx="1.6" stroke="#f0a500" stroke-width="1.2"/><rect x="2" y="2" width="8" height="7" rx="0.6" fill="#f0a500"/><line x1="15.6" y1="3.5" x2="15.6" y2="7.5" stroke="#f0a500" stroke-width="1.5" stroke-linecap="round"/></svg><div class="s2"><span style="font-size:9px;color:#aaa;">Screen</span><span style="font-size:9px;color:#f0a500;">82% ⚡</span></div></div></div>
+</div>
+
+<!-- MOTION LOCK -->
+<div class="drive-screen" id="s-drive" onclick="go('s-main')">
+  <div style="background:#111122;padding:10px 16px;text-align:center;flex-shrink:0;"><div style="font-size:13px;font-weight:500;color:#5555aa;">Motion lock – tap anywhere to dismiss</div></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:12px;">
+    <div style="font-size:68px;font-weight:700;color:#e0e0ff;line-height:1;" id="dl-clock">--:--</div>
+    <div style="font-size:16px;color:#8888aa;" id="dl-date">--/--/----</div>
+    <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
+      <div style="background:#1a1a2e;border-radius:10px;padding:11px 14px;"><div style="font-size:10px;color:#5555aa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">Route</div><div style="font-size:14px;font-weight:500;color:#c0c0e0;" id="dl-route">Route 45 – Inbound</div></div>
+      <div style="background:#1a1a2e;border-radius:10px;padding:11px 14px;"><div style="font-size:10px;color:#5555aa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">Next stop</div><div style="font-size:14px;font-weight:500;color:#c0c0e0;">Market Square</div></div>
+      <div style="background:#1a1a2e;border-radius:10px;padding:11px 14px;"><div style="font-size:10px;color:#5555aa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Donation target progress</div><div style="display:flex;align-items:center;gap:10px;"><div style="flex:1;background:#0a0a1e;border-radius:4px;height:14px;overflow:hidden;"><div style="width:62%;background:#4444aa;height:100%;border-radius:4px;"></div></div><div style="font-size:15px;font-weight:600;color:#c0c0e0;">62%</div></div></div>
+      <div style="background:#1a1a2e;border-radius:10px;padding:11px 14px;"><div style="font-size:10px;color:#5555aa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">Screen battery</div><div style="font-size:24px;font-weight:600;color:#c0c0e0;">82% ⚡</div></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;background:#0a0a1e;padding:7px 8px;gap:5px;flex-shrink:0;"><div style="font-size:12px;font-weight:600;color:#4444aa;margin-right:4px;">Rali-Clipper</div><div style="display:flex;align-items:center;gap:3px;background:#1a1a2e;border-radius:5px;padding:4px 6px;"><span style="font-size:9px;color:#4444aa;">GPS</span></div><div style="display:flex;align-items:center;gap:3px;background:#1a1a2e;border-radius:5px;padding:4px 6px;margin-left:auto;"><div style="display:flex;flex-direction:column;line-height:1.3;"><span style="font-size:9px;color:#333366;">Screen</span><span style="font-size:9px;color:#4444aa;">82%</span></div></div></div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     EDITOR SIDE
+═══════════════════════════════════════ -->
+
+<!-- EDITOR PIN SETUP -->
+<div class="screen" id="s-ed-pinsetup" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Create editor PIN</div><div class="sub">First time setup — choose a 4-digit PIN</div></div>
+  <div class="npwrap">
+    <div class="ndisp" id="eps-disp"><span class="ph">Enter new PIN</span></div>
+    <div style="font-size:11px;color:#888;text-align:center;margin-bottom:14px;" id="eps-hint">Choose a 4-digit PIN to protect the editor</div>
+    <div class="npgrid">
+      <button onclick="npEd('1')">1</button><button onclick="npEd('2')">2</button><button onclick="npEd('3')">3</button>
+      <button onclick="npEd('4')">4</button><button onclick="npEd('5')">5</button><button onclick="npEd('6')">6</button>
+      <button onclick="npEd('7')">7</button><button onclick="npEd('8')">8</button><button onclick="npEd('9')">9</button>
+      <button class="del" onclick="npEdBack()">⌫</button><button onclick="npEd('0')">0</button>
+      <button class="go" onclick="edPinSetupNext()">Next →</button>
+    </div>
+  </div>
+  <button class="btn-back-live" onclick="go('s-welcome')">← Cancel</button>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Editor setup</div></div>
+</div>
+
+<!-- EDITOR PIN CONFIRM -->
+<div class="screen" id="s-ed-pinconfirm" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Confirm your PIN</div><div class="sub">Enter the same PIN again to confirm</div></div>
+  <div class="npwrap">
+    <div class="ndisp" id="epc-disp"><span class="ph">Confirm PIN</span></div>
+    <div style="font-size:11px;color:#888;text-align:center;margin-bottom:14px;" id="epc-hint">Re-enter your PIN to confirm</div>
+    <div class="npgrid">
+      <button onclick="npEdC('1')">1</button><button onclick="npEdC('2')">2</button><button onclick="npEdC('3')">3</button>
+      <button onclick="npEdC('4')">4</button><button onclick="npEdC('5')">5</button><button onclick="npEdC('6')">6</button>
+      <button onclick="npEdC('7')">7</button><button onclick="npEdC('8')">8</button><button onclick="npEdC('9')">9</button>
+      <button class="del" onclick="npEdCBack()">⌫</button><button onclick="npEdC('0')">0</button>
+      <button class="go" onclick="edPinConfirm()">Done ✓</button>
+    </div>
+  </div>
+  <button class="btn-back-live" onclick="go('s-ed-pinsetup')">← Back</button>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Editor setup</div></div>
+</div>
+
+<!-- EDITOR PIN ENTRY -->
+<div class="screen" id="s-ed-pinentry" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Manage and edit</div><div class="sub">Enter your PIN to continue</div></div>
+  <div class="npwrap">
+    <div class="ndisp" id="epe-disp"><span class="ph">Editor PIN</span></div>
+    <div style="font-size:11px;color:#e74c3c;text-align:center;margin-bottom:14px;display:none;" id="epe-err">Incorrect PIN. Please try again.</div>
+    <div style="height:14px;"></div>
+    <div class="npgrid">
+      <button onclick="npEpe('1')">1</button><button onclick="npEpe('2')">2</button><button onclick="npEpe('3')">3</button>
+      <button onclick="npEpe('4')">4</button><button onclick="npEpe('5')">5</button><button onclick="npEpe('6')">6</button>
+      <button onclick="npEpe('7')">7</button><button onclick="npEpe('8')">8</button><button onclick="npEpe('9')">9</button>
+      <button class="del" onclick="npEpeBack()">⌫</button><button onclick="npEpe('0')">0</button>
+      <button class="go" onclick="edPinCheck()">Enter →</button>
+    </div>
+  </div>
+  <button class="btn-back-live" onclick="go('s-welcome')">← Back to welcome</button>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Manage and edit</div></div>
+</div>
+
+<!-- EDITOR HOME -->
+<div class="screen" id="s-ed-home" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Manage and edit</div><div class="sub">Manage your Rali-Clipper setup</div></div>
+  <div class="scroll">
+    <div class="menu-btn" onclick="go('s-ed-svc')"><div><div class="mb-name">Services</div><div class="mb-sub">Routes, stops, fare stages, ticket types</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-drivers');renderDriverList()"><div><div class="mb-name">Drivers</div><div class="mb-sub">Manage driver numbers and PINs</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-vehicles');renderVehicleList()"><div><div class="mb-name">Vehicles</div><div class="mb-sub">Fleet and vehicle details</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-duties')"><div><div class="mb-name">Duties &amp; Running boards</div><div class="mb-sub">Build and manage duty schedules</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-history');renderHistory()"><div><div class="mb-name">Fuel &amp; trip history</div><div class="mb-sub">View past trips, fuel records and stats</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-settings')"><div><div class="mb-name">Settings</div><div class="mb-sub">Account details and PIN management</div></div><div class="mb-arr">›</div></div>
+    <button class="btn-back" onclick="go('s-welcome')">← Back to welcome screen</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Manage and edit</div></div>
+</div>
+
+<!-- SERVICES HOME -->
+<div class="screen" id="s-ed-svc" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Services</div><div class="sub">Manage routes, stops and ticket types</div></div>
+  <div class="scroll">
+    <div class="menu-btn" onclick="go('s-ed-farestages');renderFareStageList()"><div><div class="mb-name">Fare stages</div><div class="mb-sub" id="fs-count-lbl">3 defined</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-stops');renderStopList()"><div><div class="mb-name">Stops</div><div class="mb-sub">5 defined</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-tickettypes');renderTicketTypeList()"><div><div class="mb-name">Ticket types</div><div class="mb-sub">4 defined</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-routes');renderRouteList()"><div><div class="mb-name">Routes</div><div class="mb-sub" id="route-count-lbl">2 defined</div></div><div class="mb-arr">›</div></div>
+    <button class="btn-back" onclick="go('s-ed-home')">← Back to editor</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Services</div></div>
+</div>
+
+<!-- FARE STAGES -->
+<div class="screen" id="s-ed-farestages" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Fare stages</div></div>
+  <div class="scroll">
+    <div id="global-fs-list"></div>
+    <button class="btn-dashed" onclick="go('s-ed-addfs')">+ Add fare stage</button>
+    <button class="btn-back" onclick="go('s-ed-svc')">← Back to services</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Fare stages</div></div>
+</div>
+
+<!-- ADD FARE STAGE -->
+<div class="screen" id="s-ed-addfs" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Add fare stage</div></div>
+  <div class="scroll">
+    <div class="tag info">A fare stage is a named zone used for calculating fares.</div>
+    <div class="ff"><label>Fare stage name *</label><input type="text" id="new-fs-name" placeholder="e.g. Town Centre"/></div>
+    <button class="btn-primary" onclick="saveNewFs()">Save fare stage</button>
+    <button class="btn-secondary" onclick="go('s-ed-farestages')">Cancel</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Add fare stage</div></div>
+</div>
+
+<!-- STOPS -->
+<div class="screen" id="s-ed-stops" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Stops</div></div>
+  <div class="scroll">
+    <div id="global-stop-list"></div>
+    <button class="btn-dashed" onclick="go('s-ed-addstop')">+ Add stop</button>
+    <button class="btn-back" onclick="go('s-ed-svc')">← Back to services</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Stops</div></div>
+</div>
+
+<!-- ADD STOP -->
+<div class="screen" id="s-ed-addstop" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Add stop</div></div>
+  <div class="scroll">
+    <div class="ff"><label>Stop name *</label><input type="text" id="new-stop-name" placeholder="e.g. High Street"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="ff"><label>Latitude *</label><input type="text" id="new-stop-lat" placeholder="51.5074"/></div>
+      <div class="ff"><label>Longitude *</label><input type="text" id="new-stop-lng" placeholder="-0.1278"/></div>
+    </div>
+    <div class="tag info">💡 Find coordinates at maps.google.com — right-click any location and coordinates appear at the top of the menu.</div>
+    <button class="btn-primary" onclick="saveNewStop()">Save stop</button>
+    <button class="btn-secondary" onclick="go('s-ed-stops')">Cancel</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Add stop</div></div>
+</div>
+
+<!-- TICKET TYPES -->
+<div class="screen" id="s-ed-tickettypes" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Ticket types</div><div class="sub">Define available ticket names</div></div>
+  <div class="scroll">
+    <div id="ticket-type-list"></div>
+    <button class="btn-dashed" onclick="go('s-ed-addtickettype')">+ Add ticket type</button>
+    <button class="btn-back" onclick="go('s-ed-svc')">← Back to services</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Ticket types</div></div>
+</div>
+
+<!-- ADD TICKET TYPE -->
+<div class="screen" id="s-ed-addtickettype" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Add ticket type</div></div>
+  <div class="scroll">
+    <div class="ff"><label>Ticket name *</label><input type="text" id="new-tt-name" placeholder="e.g. Adult Single"/></div>
+    <div class="ff"><label>Category</label>
+      <select id="new-tt-cat"><option>Single fare</option><option>Return fare</option><option>Day ticket</option><option>Donation</option><option>Other</option></select>
+    </div>
+    <button class="btn-primary" onclick="saveNewTicketType()">Save ticket type</button>
+    <button class="btn-secondary" onclick="go('s-ed-tickettypes')">Cancel</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Add ticket type</div></div>
+</div>
+
+<!-- ROUTES -->
+<div class="screen" id="s-ed-routes" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Routes</div></div>
+  <div class="scroll">
+    <div id="route-list"></div>
+    <button class="btn-dashed" onclick="go('s-ed-addroute')">+ Add route</button>
+    <button class="btn-back" onclick="go('s-ed-svc')">← Back to services</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Routes</div></div>
+</div>
+
+<!-- ADD ROUTE -->
+<div class="screen" id="s-ed-addroute" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Add route</div></div>
+  <div class="scroll">
+    <div class="ff"><label>Route name / number *</label><input type="text" id="new-route-name" placeholder="e.g. Route 45 or Rally route"/></div>
+    <div class="ff"><label>Direction type *</label>
+      <select id="new-route-dir">
+        <option value="io">Inbound / Outbound</option>
+        <option value="ns">Northbound / Southbound</option>
+        <option value="ew">Eastbound / Westbound</option>
+        <option value="ca">Clockwise / Anticlockwise</option>
+      </select>
+    </div>
+    <div class="ff"><label>Notes (optional)</label><input type="text" id="new-route-notes" placeholder="e.g. Summer service only"/></div>
+    <button class="btn-primary" onclick="saveNewRoute()">Save route</button>
+    <button class="btn-secondary" onclick="go('s-ed-routes')">Cancel</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Add route</div></div>
+</div>
+
+<!-- ROUTE DETAIL -->
+<div class="screen" id="s-ed-routedetail" style="background:#f0f0f0;">
+  <div class="ed-hdr" id="route-detail-hdr"><div class="title">Route detail</div><div class="sub">Route settings</div></div>
+  <div class="scroll">
+    <div class="menu-btn" onclick="go('s-ed-routefs');renderRouteFsList()"><div><div class="mb-name">Add &amp; order fare stages</div><div class="mb-sub">Fare stages assigned to this route</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-instops');updateAllStopArrows()"><div><div class="mb-name">Inbound stops</div><div class="mb-sub">Stops for inbound direction</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-outstops');updateAllStopArrows()"><div><div class="mb-name">Outbound stops</div><div class="mb-sub">Stops for outbound direction</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn" onclick="go('s-ed-routetickets')"><div><div class="mb-name">Tickets</div><div class="mb-sub">Assign fares to ticket types</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn danger"><div><div class="mb-name">Delete route</div><div class="mb-sub">This cannot be undone</div></div></div>
+    <button class="btn-back" onclick="go('s-ed-routes');renderRouteList()">← Back to routes</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Route detail</div></div>
+</div>
+
+<!-- ROUTE FARE STAGES -->
+<div class="screen" id="s-ed-routefs" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Add &amp; order fare stages</div><div class="sub">Inbound shown — Outbound mirrored</div></div>
+  <div class="scroll">
+    <div class="dir-cap start" id="route-fs-start">Start of Inbound trip</div>
+    <div id="route-fs-list"></div>
+    <div class="dir-cap end" id="route-fs-end">End of Inbound trip</div>
+    <div class="dir-cap mirror" id="route-fs-mirror">Outbound will be mirrored in reverse</div>
+    <button class="btn-dashed" onclick="showAddFsModal()">+ Add fare stage</button>
+    <button class="btn-back" onclick="go('s-ed-routedetail')">← Back to route</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Fare stages</div></div>
+</div>
+
+<!-- INBOUND STOPS -->
+<div class="screen" id="s-ed-instops" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Inbound stops</div></div>
+  <div class="scroll" id="inbound-stops-scroll">
+    <div class="fs-block" data-fs="Town Centre">
+      <div class="fs-block-hdr"><span class="fs-block-name">Town Centre</span></div>
+      <div class="stop-item-ed"><span class="si-name">Town Centre NB</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div>
+      <div class="stop-item-ed"><span class="si-name">Library</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div>
+      <div class="stop-item-ed"><span class="si-name">High Street</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div>
+    </div>
+    <div class="fs-block" data-fs="Hospital">
+      <div class="fs-block-hdr"><span class="fs-block-name">Hospital</span></div>
+      <div class="stop-item-ed"><span class="si-name">Church Road</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div>
+      <div class="stop-item-ed"><span class="si-name">Hospital Stop</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div>
+    </div>
+    <div class="fs-block" data-fs="Bus Station">
+      <div class="fs-block-hdr"><span class="fs-block-name">Bus Station</span></div>
+      <div class="stop-item-ed"><span class="si-name">Bus Station</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div>
+    </div>
+  </div>
+  <div style="padding:8px 14px;display:flex;flex-direction:column;gap:6px;flex-shrink:0;border-top:1px solid #ddd;background:#f0f0f0;">
+    <div style="display:flex;gap:8px;"><button class="btn-dashed" style="flex:1;" onclick="showModal('m-ed-assignstop')">Assign existing</button><button class="btn-dashed" style="flex:1;" onclick="showModal('m-ed-createstop')">Create new</button></div>
+    <button class="btn-back" onclick="go('s-ed-routedetail')">← Back to route</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Inbound stops</div></div>
+</div>
+
+<!-- OUTBOUND STOPS -->
+<div class="screen" id="s-ed-outstops" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Outbound stops</div></div>
+  <div class="scroll" id="outbound-stops-scroll">
+    <div class="tag success">Fare stages mirrored from Inbound. Add stops independently.</div>
+    <div class="fs-block"><div class="fs-block-hdr" style="background:#e8f8e8;"><span class="fs-block-name" style="color:#1e6b1e;">Bus Station</span></div><div class="stop-item-ed"><span class="si-name">Bus Station SB</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div></div>
+    <div class="fs-block"><div class="fs-block-hdr" style="background:#e8f8e8;"><span class="fs-block-name" style="color:#1e6b1e;">Hospital</span></div><div class="stop-item-ed"><span class="si-name">Hospital SB</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div><div class="stop-item-ed"><span class="si-name">Church Rd SB</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div></div>
+    <div class="fs-block"><div class="fs-block-hdr" style="background:#e8f8e8;"><span class="fs-block-name" style="color:#1e6b1e;">Town Centre</span></div><div class="stop-item-ed"><span class="si-name">High St SB</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div><div class="stop-item-ed"><span class="si-name">Library SB</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div><div class="stop-item-ed"><span class="si-name">Town Centre SB</span><button class="arr-btn" onclick="moveStop(this,'up')">▲</button><button class="arr-btn" onclick="moveStop(this,'down')">▼</button><button class="btn-sm red" onclick="this.closest('.stop-item-ed').remove();updateAllStopArrows()">✕</button></div></div>
+  </div>
+  <div style="padding:8px 14px;display:flex;flex-direction:column;gap:6px;flex-shrink:0;border-top:1px solid #ddd;background:#f0f0f0;">
+    <div style="display:flex;gap:8px;"><button class="btn-dashed" style="flex:1;" onclick="showModal('m-ed-assignstop')">Assign existing</button><button class="btn-dashed" style="flex:1;" onclick="showModal('m-ed-createstop')">Create new</button></div>
+    <button class="btn-back" onclick="go('s-ed-routedetail')">← Back to route</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Outbound stops</div></div>
+</div>
+
+<!-- ROUTE TICKETS -->
+<div class="screen" id="s-ed-routetickets" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Route tickets</div><div class="sub">Assign fares to ticket types</div></div>
+  <div class="scroll">
+    <div class="ticket-item"><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Adult Single</div><div style="font-size:11px;color:#888;margin-top:2px;">Fare chart · min £1.00 · max £3.00</div></div><button class="btn-sm blue" onclick="go('s-ed-farechart')">Edit chart</button><button class="btn-sm amber" onclick="showModal('m-ed-rule')">Apply rule</button></div>
+    <div class="ticket-item"><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Child Single</div><div style="font-size:11px;color:#888;margin-top:2px;">Fare chart · empty</div></div><button class="btn-sm blue" onclick="go('s-ed-farechart')">Edit chart</button><button class="btn-sm amber" onclick="showModal('m-ed-rule')">Apply rule</button></div>
+    <div class="ticket-item"><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Adult donation</div><div style="font-size:11px;color:#888;margin-top:2px;">Flat fare · £2.00</div></div><button class="btn-sm" onclick="showModal('m-ed-flatfare')">Edit</button></div>
+    <div class="card" style="padding:10px 12px;">
+      <div class="ff" style="margin-bottom:8px;"><label>Select ticket type</label><select><option>Select...</option><option>Child donation</option><option>Adult Return</option></select></div>
+      <div style="display:flex;gap:8px;"><button class="btn-secondary" style="flex:1;padding:9px;" onclick="showModal('m-ed-flatfare')">+ Flat fare</button><button class="btn-primary" style="flex:1;padding:9px;" onclick="go('s-ed-farechart')">+ Fare chart</button></div>
+    </div>
+    <button class="btn-back" onclick="go('s-ed-routedetail')">← Back to route</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Tickets</div></div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     JOIN POINT — paste index_part2.html
+     content directly below this line
+═══════════════════════════════════════ -->
