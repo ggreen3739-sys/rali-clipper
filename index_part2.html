@@ -1,0 +1,296 @@
+<!-- PASTE THIS DIRECTLY AFTER THE FARE CHART TABLE OPENING LINE:
+     <tr><td class="orig">Bus Station</td>   
+     DELETE that incomplete line and replace with everything below -->
+
+        <tr><td class="orig">Bus Station</td><td><input type="text" value="3.00"/></td><td><input type="text" value="2.00"/></td><td class="local"><input type="text" value="1.00" style="background:transparent;"/></td></tr>
+        <tr><td class="orig">Hospital</td><td><input type="text" value="2.00"/></td><td class="local"><input type="text" value="1.00" style="background:transparent;"/></td><td class="blank"></td></tr>
+        <tr><td class="orig">Town Centre</td><td class="local"><input type="text" value="1.00" style="background:transparent;"/></td><td class="blank"></td><td class="blank"></td></tr>
+      </table>
+    </div>
+    <div style="font-size:11px;color:#888;">🟡 Yellow = local fare. Blank = no ticket issued.</div>
+    <button class="btn-sm amber" style="width:100%;padding:9px;" onclick="showModal('m-ed-rule')">Apply rule to fill this chart</button>
+    <button class="btn-primary" onclick="go('s-ed-routetickets')">Save fare chart</button>
+    <button class="btn-secondary" onclick="go('s-ed-routetickets')">Cancel</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Fare chart</div></div>
+</div>
+
+<!-- DRIVERS -->
+<div class="screen" id="s-ed-drivers" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Drivers</div></div>
+  <div class="scroll">
+    <div id="driver-list"></div>
+    <button class="btn-dashed" onclick="go('s-ed-adddriver')">+ Add driver</button>
+    <button class="btn-back" onclick="go('s-ed-home')">← Back to editor</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Drivers</div></div>
+</div>
+
+<!-- ADD DRIVER -->
+<div class="screen" id="s-ed-adddriver" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Add driver</div></div>
+  <div class="scroll">
+    <div class="ff"><label>Driver name *</label><input type="text" id="new-d-name" placeholder="e.g. John Smith"/></div>
+    <div class="ff"><label>Driver number *</label><input type="text" id="new-d-num" placeholder="e.g. 1042"/></div>
+    <div class="ff"><label>PIN *</label><input type="password" placeholder="4-digit PIN"/></div>
+    <div class="ff"><label>Notes (optional)</label><input type="text" id="new-d-notes" placeholder="e.g. Volunteer, weekends only"/></div>
+    <button class="btn-primary" onclick="saveNewDriver()">Save driver</button>
+    <button class="btn-secondary" onclick="go('s-ed-drivers')">Cancel</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Add driver</div></div>
+</div>
+
+<!-- VEHICLES -->
+<div class="screen" id="s-ed-vehicles" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Vehicles</div></div>
+  <div class="scroll">
+    <div id="vehicle-list"></div>
+    <button class="btn-dashed" onclick="go('s-ed-addvehicle')">+ Add vehicle</button>
+    <button class="btn-back" onclick="go('s-ed-home')">← Back to editor</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Vehicles</div></div>
+</div>
+
+<!-- ADD VEHICLE -->
+<div class="screen" id="s-ed-addvehicle" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Add vehicle</div></div>
+  <div class="scroll">
+    <div class="ff"><label>Registration number *</label><input type="text" id="new-v-reg" placeholder="e.g. ABC 123D"/></div>
+    <div class="ff"><label>Fleet number</label><input type="text" id="new-v-fleet" placeholder="e.g. 1234"/></div>
+    <div class="ff"><label>Make and model *</label><input type="text" id="new-v-make" placeholder="e.g. AEC Routemaster"/></div>
+    <div class="ff"><label>Capacity</label><input type="number" id="new-v-cap" placeholder="e.g. 64"/></div>
+    <button class="btn-primary" onclick="saveNewVehicle()">Save vehicle</button>
+    <button class="btn-secondary" onclick="go('s-ed-vehicles')">Cancel</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Add vehicle</div></div>
+</div>
+
+<!-- DUTIES -->
+<div class="screen" id="s-ed-duties" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Duties &amp; Running boards</div></div>
+  <div class="scroll">
+    <div class="menu-btn"><div><div class="mb-name">Duty 101 – Morning shift</div><div class="mb-sub">5 events · Routes 45, 46</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn"><div><div class="mb-name">Running board 310 – Rally special</div><div class="mb-sub">3 events · Rally route</div></div><div class="mb-arr">›</div></div>
+    <button class="btn-dashed">+ Add duty / running board</button>
+    <button class="btn-back" onclick="go('s-ed-home')">← Back to editor</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Duties</div></div>
+</div>
+
+<!-- HISTORY -->
+<div class="screen" id="s-ed-history" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Fuel &amp; trip history</div></div>
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all"   onclick="setFilter('all')">All</button>
+    <button class="filter-btn"        data-filter="trips" onclick="setFilter('trips')">Trips</button>
+    <button class="filter-btn"        data-filter="dead"  onclick="setFilter('dead')">Dead runs</button>
+    <button class="filter-btn"        data-filter="fuel"  onclick="setFilter('fuel')">Fuel</button>
+  </div>
+  <div class="lscroll" id="history-list"></div>
+  <button class="btn-back" style="margin:8px 14px;display:block;width:calc(100% - 28px);" onclick="go('s-ed-home')">← Back to editor</button>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">History</div></div>
+</div>
+
+<!-- EDITOR SETTINGS -->
+<div class="screen" id="s-ed-settings" style="background:#f0f0f0;">
+  <div class="ed-hdr"><div class="title">Settings</div><div class="sub">Account and PIN management</div></div>
+  <div class="scroll">
+    <div class="menu-btn"><div><div class="mb-name">Organisation name</div><div class="mb-sub">Preservation Bus Group</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn"><div><div class="mb-name">Email address</div><div class="mb-sub">admin@example.co.uk</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn"><div><div class="mb-name">Change editor PIN</div><div class="mb-sub">Update your 4-digit editor PIN</div></div><div class="mb-arr">›</div></div>
+    <div class="menu-btn"><div><div class="mb-name">Rali-Clipper version</div><div class="mb-sub">v0.01</div></div></div>
+    <button class="btn-back" onclick="go('s-ed-home')">← Back to editor</button>
+  </div>
+  <div class="ed-sbar"><div class="ed-brand">Rali-Clipper</div><div class="ed-pill">Settings</div></div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODALS
+═══════════════════════════════════════ -->
+
+<!-- Ad-hoc vehicle -->
+<div class="modal-bg" id="adhoc-modal" onclick="hideModal('adhoc-modal')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Add ad-hoc vehicle</h3>
+    <div style="margin-bottom:10px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Registration number *</label><input type="text" id="ah-reg" placeholder="e.g. ABC 123D" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+    <div style="margin-bottom:10px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Fleet number (optional)</label><input type="text" id="ah-fleet" placeholder="e.g. 1234" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+    <div style="margin-bottom:10px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Make / description (optional)</label><input type="text" id="ah-make" placeholder="e.g. AEC Routemaster" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+    <div style="margin-bottom:14px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Capacity (optional)</label><input type="number" id="ah-cap" placeholder="e.g. 64" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+    <div id="ah-err" style="font-size:11px;color:#e74c3c;margin-bottom:8px;display:none;">Registration number is required.</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('adhoc-modal')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button>
+      <button onclick="saveAdhoc()" style="flex:2;background:#2c5f9e;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Save &amp; select</button>
+    </div>
+  </div>
+</div>
+
+<!-- Test print -->
+<div class="modal-bg" id="tp-modal" onclick="hideModal('tp-modal')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Test print</h3>
+    <div style="background:#f9f9f9;border:1px dashed #ccc;border-radius:8px;padding:14px;font-family:monospace;font-size:12px;line-height:2;color:#333;margin-bottom:14px;text-align:center;">
+      <div style="font-size:15px;font-weight:700;">RALI-CLIPPER</div>
+      <div style="color:#888;margin-bottom:4px;">— TEST PRINT —</div>
+      <div style="text-align:left;">Driver:&nbsp;&nbsp;1042<br>Vehicle: ABC 123D<br>Route:&nbsp;&nbsp; Route 45<br><span id="tp-dt"></span></div>
+      <div style="border-top:1px dashed #ccc;margin-top:8px;padding-top:8px;color:#888;">Printer connection OK</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('tp-modal')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Close</button>
+      <button style="flex:2;background:#2c5f9e;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Send to printer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fare stage picker (live ticket screen) -->
+<div class="modal-bg" id="fs-picker-modal" onclick="hideModal('fs-picker-modal')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3 id="fs-picker-title">Select fare stage</h3>
+    <div id="fs-picker-list"></div>
+    <div style="margin-top:12px;"><button onclick="hideModal('fs-picker-modal')" style="width:100%;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button></div>
+  </div>
+</div>
+
+<!-- Stop picker (live ticket screen) -->
+<div class="modal-bg" id="stop-picker-modal" onclick="hideModal('stop-picker-modal')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Select stop</h3>
+    <div id="stop-picker-list"></div>
+    <div style="margin-top:12px;"><button onclick="hideModal('stop-picker-modal')" style="width:100%;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button></div>
+  </div>
+</div>
+
+<!-- Over capacity warning -->
+<div class="modal-bg" id="over-cap-modal" onclick="hideModal('over-cap-modal')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3 style="color:#c0392b;">⚠ Over capacity</h3>
+    <div id="over-cap-msg" style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;"></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('over-cap-modal')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Abort</button>
+      <button id="over-cap-confirm" style="flex:2;background:#c0392b;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Issue anyway</button>
+    </div>
+  </div>
+</div>
+
+<!-- Multi-ticket add -->
+<div class="modal-bg" id="multi-ticket-modal" onclick="hideModal('multi-ticket-modal')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Multi-ticket add</h3>
+    <p style="font-size:12px;color:#888;margin-bottom:12px;">Enter quantity to add to basket</p>
+    <div class="ndisp" id="multi-np-disp" style="margin-bottom:12px;"><span class="ph">Enter quantity</span></div>
+    <div class="npgrid" style="margin-bottom:14px;">
+      <button onclick="multiNp('1')">1</button><button onclick="multiNp('2')">2</button><button onclick="multiNp('3')">3</button>
+      <button onclick="multiNp('4')">4</button><button onclick="multiNp('5')">5</button><button onclick="multiNp('6')">6</button>
+      <button onclick="multiNp('7')">7</button><button onclick="multiNp('8')">8</button><button onclick="multiNp('9')">9</button>
+      <button class="del" onclick="multiNp('back')">⌫</button><button onclick="multiNp('0')">0</button>
+      <button class="go" onclick="confirmMultiTicket()">Add →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add fare stage to route -->
+<div class="modal-bg" id="m-ed-addfs" onclick="hideModal('m-ed-addfs')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Add fare stage to route</h3>
+    <p style="font-size:12px;color:#888;margin-bottom:12px;">Added to bottom of Inbound (top of Outbound). Use arrows to reorder.</p>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:11px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">Select fare stage</label>
+      <select id="m-fs-select" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;background:#fff;-webkit-appearance:auto;"></select>
+    </div>
+    <div style="background:#f0fff4;border:1px solid #a9dfbf;border-radius:6px;padding:8px 10px;font-size:11px;color:#1e6b1e;margin-bottom:14px;">Each fare stage can only appear once per direction.</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('m-ed-addfs')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button>
+      <button onclick="addFsToRoute()" style="flex:2;background:#2c5f9e;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Add fare stage</button>
+    </div>
+  </div>
+</div>
+
+<!-- Assign stop -->
+<div class="modal-bg" id="m-ed-assignstop" onclick="hideModal('m-ed-assignstop')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Assign existing stop</h3>
+    <div style="margin-bottom:10px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">Select stop</label><select style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;background:#fff;-webkit-appearance:auto;"><option>Bus Station</option><option>High Street</option><option>Market Square</option><option>Town Centre</option><option>Hospital</option></select></div>
+    <div style="margin-bottom:14px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">Assign to fare stage</label><select style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;background:#fff;-webkit-appearance:auto;"><option>Town Centre</option><option>Hospital</option><option>Bus Station</option></select></div>
+    <div style="background:#f0fff4;border:1px solid #a9dfbf;border-radius:6px;padding:8px 10px;font-size:11px;color:#1e6b1e;margin-bottom:14px;">Stop will be added to the bottom of the selected fare stage.</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('m-ed-assignstop')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button>
+      <button onclick="hideModal('m-ed-assignstop')" style="flex:2;background:#2c5f9e;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Assign stop</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create stop -->
+<div class="modal-bg" id="m-ed-createstop" onclick="hideModal('m-ed-createstop')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Create new stop</h3>
+    <div style="margin-bottom:10px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Stop name *</label><input type="text" placeholder="e.g. Market Square" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Latitude *</label><input type="text" placeholder="51.5090" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+      <div><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Longitude *</label><input type="text" placeholder="-0.1250" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+    </div>
+    <div style="margin-bottom:14px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">Assign to fare stage</label><select style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;background:#fff;-webkit-appearance:auto;"><option>Town Centre</option><option>Hospital</option><option>Bus Station</option></select></div>
+    <div style="background:#f0f6ff;border:1px solid #b8d0f0;border-radius:6px;padding:8px 10px;font-size:11px;color:#2c5f9e;margin-bottom:14px;">This stop will also be saved to the main stops library.</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('m-ed-createstop')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button>
+      <button onclick="hideModal('m-ed-createstop')" style="flex:2;background:#2c5f9e;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Create &amp; assign</button>
+    </div>
+  </div>
+</div>
+
+<!-- Apply rule -->
+<div class="modal-bg" id="m-ed-rule" onclick="hideModal('m-ed-rule')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Apply fare rule</h3>
+    <div style="margin-bottom:10px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">Base fare chart</label><select style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;background:#fff;-webkit-appearance:auto;"><option>Adult Single</option><option>Child Single</option></select></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Operation</label><select id="rule-op" onchange="updatePreview()" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;background:#fff;-webkit-appearance:auto;"><option value="multiply">Multiply</option><option value="divide">Divide</option><option value="add">Add</option><option value="subtract">Subtract</option><option value="cap">Cap all above</option></select></div>
+      <div><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Value</label><input type="number" id="rule-val" value="2" step="0.01" oninput="updatePreview()" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+    </div>
+    <div style="margin-bottom:10px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">Rounding</label><select style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;background:#fff;-webkit-appearance:auto;"><option>No rounding</option><option>Round to nearest 5p</option><option>Round to nearest 10p</option><option>Round up to nearest 5p</option><option>Round up to nearest 10p</option><option>Round down to nearest 5p</option><option>Round down to nearest 10p</option></select></div>
+    <div class="preview-box"><div class="pb-lbl">Preview — highest base fare (£3.00)</div><div class="pb-val" id="rule-preview">£3.00 → £1.50</div></div>
+    <div style="background:#fff8e8;border:1px solid #f0c040;border-radius:6px;padding:8px 10px;font-size:11px;color:#b07d00;margin:10px 0 14px;">Cells will be filled based on this rule. You can edit any cell after applying.</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('m-ed-rule')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button>
+      <button onclick="hideModal('m-ed-rule')" style="flex:2;background:#b07d00;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Apply rule</button>
+    </div>
+  </div>
+</div>
+
+<!-- Flat fare -->
+<div class="modal-bg" id="m-ed-flatfare" onclick="hideModal('m-ed-flatfare')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Edit flat fare</h3>
+    <div style="margin-bottom:14px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;">Price (£) *</label><input type="number" value="2.00" step="0.01" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:12px;font-size:26px;font-weight:500;outline:none;text-align:center;"/></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('m-ed-flatfare')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button>
+      <button onclick="hideModal('m-ed-flatfare')" style="flex:2;background:#2c5f9e;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit fare stage name -->
+<div class="modal-bg" id="m-ed-editfs" onclick="hideModal('m-ed-editfs')">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <h3>Edit fare stage</h3>
+    <div style="margin-bottom:14px;"><label style="font-size:11px;color:#888;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px;">Fare stage name *</label><input type="text" id="edit-fs-input" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;outline:none;"/></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="hideModal('m-ed-editfs')" style="flex:1;background:#f0f0f0;border:1.5px solid #ccc;border-radius:8px;padding:11px;font-size:13px;color:#555;cursor:pointer;">Cancel</button>
+      <button id="edit-fs-save" style="flex:2;background:#2c5f9e;color:#fff;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:500;cursor:pointer;">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS — link all JS files
+═══════════════════════════════════════ -->
+<script src="live.js"></script>
+<script src="editor.js"></script>
+<script>
+  window.addEventListener('load', function() {
+    liveInit();
+    editorInit();
+  });
+</script>
+
+</div><!-- end .device -->
+</body>
+</html>
