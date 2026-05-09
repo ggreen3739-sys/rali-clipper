@@ -286,7 +286,6 @@ function _doSetTrip(route, from, to, dir, journeyId) {
   var mr = document.getElementById('m-route'); if (mr) mr.textContent = routeName;
   var tf = document.getElementById('ti-from'); if (tf) tf.textContent = from || '—';
   var tt = document.getElementById('ti-to');   if (tt) tt.textContent = to || '—';
-  var td = document.getElementById('ti-dir');  if (td) td.textContent = dir;
   var dl = document.getElementById('dl-route');if (dl) dl.textContent = routeName + ' – ' + dir;
   currentTicketGroup = null;
   currentTicketPage  = 0;
@@ -301,7 +300,7 @@ function _doSetTrip(route, from, to, dir, journeyId) {
   if (adhocStartTime) { tripStartTime = adhocStartTime; adhocStartTime = null; }
   else                { tripStartTime = nowHM(); }
   var ts = document.getElementById('ti-start'); if (ts) ts.textContent = tripStartTime || '--:--';
-  var tn = document.getElementById('ti-trip');  if (tn) tn.textContent = currentJourneyId || '—';
+  var tn = document.getElementById('ti-trip');  if (tn) tn.textContent = (currentJourneyId || '—') + ' — ' + (dir || currentDirection || '—');
   updateTimetableClock(getCurrentTimetableTrip() ? 'matched' : 'unmatched');
 
   // Start tracking new trip
@@ -598,6 +597,30 @@ function makeBox(label, subLabel, idx) {
   return box;
 }
 
+function makeLsRow(label, idx) {
+  var row = document.createElement('div');
+  row.className = 'tbox';
+  row.innerHTML =
+    '<div></div>'
+    + '<div class="tr-name">' + label + '</div>'
+    + '<div class="tr-sep">|</div>'
+    + '<div class="tp" id="tprice-' + idx + '">—</div>'
+    + '<div class="tr-sep">|</div>'
+    + '<div></div>'
+    + '<button class="qm" onclick="adj(' + idx + ',-1)">−</button>'
+    + '<div></div>'
+    + '<span class="qv" id="qv' + idx + '">' + (basket[idx] || 0) + '</span>'
+    + '<div></div>'
+    + '<button class="qp" onclick="adj(' + idx + ',1)">+</button>'
+    + '<div></div>';
+  row.addEventListener('mousedown',  function() { startLongPress(row, idx); });
+  row.addEventListener('mouseup',    cancelLongPress);
+  row.addEventListener('mouseleave', cancelLongPress);
+  row.addEventListener('touchstart', function() { startLongPress(row, idx); }, {passive:true});
+  row.addEventListener('touchend',   cancelLongPress);
+  return row;
+}
+
 function renderTicketTabs() {
   var tabsEl = document.getElementById('ticket-tabs');
   if (!tabsEl) return;
@@ -618,9 +641,29 @@ function renderTicketTabs() {
   }
 
   var total = editorTicketGroups.length;
-  currentTabOffset = Math.max(0, Math.min(currentTabOffset, Math.max(0, total - 4)));
-
   tabsEl.innerHTML = '';
+
+  if (_lsActive) {
+    // Landscape: show all groups as a scrollable vertical list, no pagination
+    for (var i = 0; i < total; i++) {
+      var g = editorTicketGroups[i];
+      var hasTickets = activeGroupIds.indexOf(g.id) !== -1;
+      var tab = document.createElement('div');
+      if (hasTickets) {
+        tab.className = 'tab' + (g.id === currentTicketGroup ? ' on' : '');
+        tab.textContent = g.name;
+        tab.onclick = (function(gid) { return function() { setTicketGroup(gid); }; })(g.id);
+      } else {
+        tab.className = 'tab empty';
+        tab.textContent = g.name;
+      }
+      tabsEl.appendChild(tab);
+    }
+    return;
+  }
+
+  // Portrait: paginated 4-at-a-time with scroll buttons
+  currentTabOffset = Math.max(0, Math.min(currentTabOffset, Math.max(0, total - 4)));
   for (var i = 0; i < 4; i++) {
     var idx = currentTabOffset + i;
     var tab = document.createElement('div');
@@ -697,6 +740,17 @@ function renderTicketGrid() {
     var gid = tt && tt.group ? tt.group : 'donations';
     if (gid === currentTicketGroup) groupTickets.push({ ticket: rt, idx: i });
   });
+
+  if (_lsActive) {
+    // Landscape: all tickets as scrollable grid rows, no pagination
+    for (var i = 0; i < groupTickets.length; i++) {
+      var item = groupTickets[i];
+      grid.appendChild(makeLsRow(item.ticket.name, item.idx));
+    }
+    renderPageDots(0, 0);
+    updateIssueButton();
+    return;
+  }
 
   var totalPages = Math.max(1, Math.ceil(groupTickets.length / 4));
   if (currentTicketPage >= totalPages) currentTicketPage = 0;
@@ -821,7 +875,7 @@ function handleIssueBtn() {
   var newPax = totalPax + total;
 
   // Capacity check
-  if (vehicleCapacity > 0 && totalPax < vehicleCapacity && newPax > vehicleCapacity) {
+  if (vehicleCapacity > 0 && totalPax <= vehicleCapacity && newPax > vehicleCapacity) {
     // Under → Over: show warning
     var over = newPax - vehicleCapacity;
     document.getElementById('over-cap-msg').textContent =
@@ -901,6 +955,8 @@ function updatePaxDisplay() {
 
   el.textContent = display;
   el.className = 'ti-val ' + colourClass;
+  var lsPax = document.getElementById('ls-pax-val');
+  if (lsPax) { lsPax.textContent = display; lsPax.className = 'ls-pax ' + colourClass; }
   updateIssueButton();
 }
 
@@ -1817,7 +1873,7 @@ function updateTimetableClock(status) {
 }
 
 function checkStopAndTimetable(point) {
-  if (!tripActive || !currentRoute) { updateTimetableClock(null); return; }
+  if (!tripActive || !currentRoute) { return; }
   var allStops = getAllDirectionStops();
   var detected = null;
   for (var i = 0; i < allStops.length; i++) {
@@ -1852,7 +1908,7 @@ function checkStopAndTimetable(point) {
 }
 
 function refreshTimetableClock() {
-  if (!tripActive) return;
+  if (!tripActive) { updateTimetableClock(null); return; }
   var ttTrip = getCurrentTimetableTrip();
   if (!ttTrip) { updateTimetableClock('unmatched'); return; }
   // Use _lastDetectedStop so status persists through the hysteresis zone
@@ -1892,7 +1948,7 @@ function updateVimStops() {
       dwellStr = (dw > 0 ? dw + ' min' : '< 1 min') + ' dwell';
     }
     prevCard.innerHTML = '<div style="font-size:10px;color:#5555aa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Previous stop</div>'
-      + '<div style="display:flex;justify-content:space-between;align-items:baseline;">'
+      + '<div class="vim-stop-row" style="display:flex;justify-content:space-between;align-items:baseline;">'
       + '<div style="font-size:14px;font-weight:500;color:#c0c0e0;">' + prevName + '</div>'
       + (stLbl ? '<div style="font-size:11px;font-weight:700;color:' + stCol + ';">' + stLbl + '</div>' : '')
       + '</div>'
@@ -1908,9 +1964,15 @@ function updateVimStops() {
   }
 
   // ── Next stop ──
-  if (!stops || !stops.length || prevIdx >= stops.length - 1) {
+  if (!stops || !stops.length) {
     nextCard.innerHTML = '<div style="font-size:10px;color:#5555aa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">Next stop</div>'
       + '<div style="font-size:13px;color:#444466;">—</div>';
+    return;
+  }
+  if (prevIdx >= stops.length - 1) {
+    var termName = stops[stops.length - 1];
+    nextCard.innerHTML = '<div style="font-size:10px;color:#5555aa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">Terminus</div>'
+      + '<div style="font-size:14px;font-weight:500;color:#c0c0e0;">' + termName + '</div>';
     return;
   }
   var nextIdx  = prevIdx + 1;
@@ -1931,7 +1993,7 @@ function updateVimStops() {
     }
   }
   nextCard.innerHTML = '<div style="font-size:10px;color:#5555aa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">'
-    + (isTerm ? 'Terminus' : 'Next stop') + '</div>'
+    + 'Next stop' + (isTerm ? ' · Terminus' : '') + '</div>'
     + '<div style="font-size:14px;font-weight:500;color:#c0c0e0;">' + nextName + '</div>'
     + '<div style="font-size:12px;color:#6666aa;margin-top:4px;">'
     + (nextSch ? 'Sch: <span style="color:#8888cc;">' + nextSch + '</span>' : '')
@@ -2120,7 +2182,45 @@ function showTripMap(trail) {
 }
 
 // ── INIT ──
+// ── ORIENTATION / SCREEN ──
+var _lsActive = false;
+
+function fitDevice() {
+  var el = document.querySelector('.device');
+  if (!el) return;
+  var dw = _lsActive ? 800 : 420;
+  var dh = _lsActive ? 420 : 800;
+  var scale = Math.min(window.innerWidth / dw, window.innerHeight / dh, 1);
+  el.style.transform = scale < 0.995 ? 'scale(' + scale.toFixed(4) + ')' : '';
+}
+
+function toggleLandscape() {
+  _lsActive = !_lsActive;
+  document.body.classList.toggle('ls-active', _lsActive);
+  _updateScreenModalLabels();
+  renderTicketTabs();
+  renderTicketGrid();
+  updateFarePrices();
+  fitDevice();
+  refreshTimetableClock();
+}
+
+function showScreenModal() {
+  _updateScreenModalLabels();
+  showModal('m-screen');
+}
+
+function _updateScreenModalLabels() {
+  var lbl = document.getElementById('screen-modal-lbl');
+  var btn = document.getElementById('screen-modal-btn-lbl');
+  if (lbl) lbl.textContent = _lsActive ? 'Currently: Landscape' : 'Currently: Portrait';
+  if (btn) btn.textContent = _lsActive ? 'Switch to portrait' : 'Switch to landscape';
+}
+
 function liveInit() {
+  fitDevice();
+  window.addEventListener('resize', fitDevice);
+  window.addEventListener('orientationchange', function() { setTimeout(fitDevice, 100); });
   renderV();
   renderLiveRouteList();
   renderLiveDutyList();

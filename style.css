@@ -5,18 +5,14 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 
 body{
-  background:#2a2a3e;
+  background:#000;
   display:flex;
   justify-content:center;
-  align-items:flex-start;
-  min-height:100vh;
-  padding:20px;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+  touch-action:manipulation;
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-}
-
-@media (max-width:500px){
-  body{padding:0;background:#1a1a2e;}
-  .device{width:100vw;height:-webkit-fill-available;height:100vh;border-radius:0;border:none;}
 }
 
 .device{
@@ -244,3 +240,149 @@ body{
 .pax-green{color:#27ae60;}
 .pax-amber{color:#f39c12;}
 .pax-red{color:#e74c3c;}
+
+/* ── LANDSCAPE WRAPPERS (portrait: transparent passthrough) ── */
+.ls-fareblock{display:flex;flex-direction:column;flex-shrink:0;}
+.ls-tickets{display:flex;flex-direction:column;flex:1;min-height:0;}
+
+/* ── LANDSCAPE MODE — device frame + ticket screen layout ── */
+body.ls-active .device{width:800px;height:420px;}
+
+/* Grid: col1=fareblock(spans rows1-2) | cols2-3=tripinfo(row1)/tbar(row2) | row3: tickets+irow(96px) */
+body.ls-active #s-main.active{
+  display:grid;
+  grid-template-columns:1fr 1fr 150px;
+  grid-template-rows:auto auto 1fr auto;
+}
+body.ls-active #s-main .tripinfo{grid-column:2/4;grid-row:1;border-top:none;flex-direction:column;align-items:stretch;padding:6px 8px;}
+body.ls-active #s-main .ls-fareblock{grid-column:1;grid-row:1/3;border-right:2px solid #999;}
+body.ls-active #s-main .tbar{grid-column:2/4;grid-row:2;flex-direction:row;border-top:2px solid #999;}
+body.ls-active #s-main .ls-tickets{grid-column:1/3;grid-row:3;display:grid;grid-template-columns:100px 1fr;grid-template-rows:1fr auto;min-height:0;overflow:hidden;border-top:2px solid #999;}
+body.ls-active #s-main .irow{grid-column:3;grid-row:3;flex-direction:column-reverse;border-top:2px solid #999;border-left:2px solid #999;height:auto;width:150px;}
+body.ls-active #s-main .sbar{grid-column:1/4;grid-row:4;}
+
+/* irow column */
+body.ls-active #s-main .irow .ism{height:auto;flex:1;padding-left:16px;padding-right:16px;}
+body.ls-active #s-main .irow .iiss{height:auto;flex:2;padding-left:16px;padding-right:16px;}
+body.ls-active #s-main .irow .ick{height:auto;flex:1.5;border-radius:12px;margin:4px 0;}
+
+/* Fare block — compact, rows fill full column height */
+body.ls-active #s-main .ls-fareblock .fare-row{padding:5px 8px;flex:1;}
+body.ls-active #s-main .ls-fareblock .fare-row .fm .fv{font-size:16px;}
+body.ls-active #s-main .ls-fareblock .fare-row .fb{width:32px;height:32px;font-size:18px;}
+body.ls-active #s-main .ls-fareblock .stop-row{padding:4px 8px;flex:1;}
+body.ls-active #s-main .ls-fareblock .stop-row .sm .sv{font-size:14px;}
+
+/* tbar row buttons */
+body.ls-active #s-main .tbar button{padding:8px 4px;font-size:12px;}
+
+/* ticket groups — vertical column on left of tgrid */
+body.ls-active #s-main .tabs-wrap{grid-column:1;grid-row:1/3;flex-direction:column;background:#d4d4d4;border-bottom:none;border-right:2px solid #999;align-items:stretch;}
+body.ls-active #s-main .tabs{flex-direction:column;overflow-y:auto;overflow-x:hidden;flex:1;}
+body.ls-active #s-main .tab{flex:none;text-align:left;padding:8px 7px;font-size:12px;border-radius:4px;margin:2px 3px;}
+body.ls-active #s-main .tab.on{border-radius:4px;}
+body.ls-active #s-main #tab-scroll-left,body.ls-active #s-main #tab-scroll-right{display:none;}
+body.ls-active #s-main .tgrid{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;padding:0;gap:0;min-height:0;}
+body.ls-active #s-main #ticket-page-dots{display:none;}
+
+/* ticket rows — CSS grid so | separators align across all rows */
+/* columns: [1fr lead] [name 130] [| 26] [price 64] [| 26] [gap 14] [− 40] [10] [qty 42] [10] [+ 40] [1fr trail] */
+/* content block centred within the tgrid; both 1fr flanks are equal */
+body.ls-active #s-main .tbox{display:grid;grid-template-columns:1fr 130px 26px 64px 26px 14px 40px 10px 42px 10px 40px 1fr;align-items:center;border-radius:0;border:none;border-bottom:1px solid #e8e8e8;padding:3px 0;min-height:54px;}
+body.ls-active #s-main .tr-name{font-size:16px;font-weight:600;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:8px;}
+body.ls-active #s-main .tr-sep{text-align:center;color:#ccc;font-size:18px;user-select:none;}
+body.ls-active #s-main .tp{font-size:15px;font-weight:700;color:#2c5f9e;text-align:center;margin:0;}
+body.ls-active #s-main .qv{text-align:center;font-size:20px;font-weight:700;color:#333;}
+body.ls-active #s-main .qm,body.ls-active #s-main .qp{width:40px;height:40px;font-size:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+
+/* Trip info: route+pax row, then 2×2 grid (Trip/From, Start/To). Direction+pax items hidden. */
+.ti-routerow{display:flex;align-items:center;}
+.ls-pax{display:none;}
+body.ls-active #s-main .ti-routerow{justify-content:space-between;border-bottom:1.5px solid #e0e0e0;padding-bottom:4px;margin-bottom:4px;}
+body.ls-active #s-main .routenum{border-right:none;min-width:unset;font-size:22px;padding:0;align-self:auto;}
+body.ls-active #s-main .ls-pax{display:block;font-size:13px;font-weight:700;}
+body.ls-active #s-main .ti-details{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:0;}
+body.ls-active #s-main .ti-row{display:contents;}
+body.ls-active #s-main .ti-row:nth-child(1) .ti-item:nth-child(1){grid-row:1;grid-column:1;} /* Trip */
+body.ls-active #s-main .ti-row:nth-child(1) .ti-item:nth-child(2){grid-row:1;grid-column:2;} /* Start time */
+body.ls-active #s-main .ti-row:nth-child(2) .ti-item:nth-child(1){grid-row:2;grid-column:1;} /* From */
+body.ls-active #s-main .ti-row:nth-child(2) .ti-item:nth-child(2){grid-row:2;grid-column:2;} /* To */
+body.ls-active #s-main .ti-lbl{font-size:8px;}
+body.ls-active #s-main .ti-val{font-size:11px;}
+
+/* 2-column layout for list screens in landscape */
+body.ls-active .ed-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+body.ls-active .ed-list .card{margin-bottom:0;}
+
+/* 2-column settings sections in landscape */
+body.ls-active .sgroup{display:grid;grid-template-columns:1fr 1fr;}
+
+/* Multi-ticket modal — compact in landscape */
+/* Multi-ticket — constrain width in portrait so it's square, not full-width */
+#multi-ticket-modal .mbox{max-width:300px;margin:0 auto;}
+#multi-ticket-modal .ndisp{padding:10px 12px;font-size:24px;min-height:50px;margin-bottom:10px;}
+#multi-ticket-modal .npgrid{gap:8px;}
+#multi-ticket-modal .npgrid button{padding:10px 6px;font-size:22px;}
+
+/* Multi-ticket — further compact in landscape */
+body.ls-active #multi-ticket-modal .mbox{max-width:220px;padding:10px 12px;}
+body.ls-active #multi-ticket-modal .mbox h3{font-size:13px;margin-bottom:4px;}
+body.ls-active #multi-ticket-modal .mbox>p{display:none;}
+body.ls-active #multi-ticket-modal .ndisp{font-size:18px;padding:5px 10px;min-height:32px;margin-bottom:6px;}
+body.ls-active #multi-ticket-modal .npgrid{gap:4px;margin-bottom:6px;}
+body.ls-active #multi-ticket-modal .npgrid button{padding:4px 3px;font-size:17px;border-radius:7px;box-shadow:0 2px 0 #bbb;}
+body.ls-active #multi-ticket-modal .npgrid .go{font-size:12px;}
+
+/* VIM screen — portrait default */
+.vim-content{flex:1;overflow-y:auto;display:flex;flex-direction:column;padding:14px;gap:10px;}
+
+/* VIM screen — 3-column redesigned landscape layout */
+/* left=date/time | centre=stops+donation | right=speed+alt+battery */
+body.ls-active #s-drive .vim-content{display:grid;grid-template-columns:160px 1fr 190px;grid-template-rows:1fr 1fr 72px;gap:6px;padding:8px;overflow:hidden;flex:1;}
+body.ls-active #s-drive .vim-content>div:nth-child(1){grid-column:1;grid-row:1;}        /* service */
+body.ls-active #s-drive .vim-content>div:nth-child(2){grid-column:2;grid-row:2;}        /* clock — centre middle */
+body.ls-active #s-drive .vim-content>div:nth-child(3){grid-column:1/3;grid-row:3;}       /* prev stop — bottom, spans cols 1-2 */
+body.ls-active #s-drive .vim-content>div:nth-child(4){grid-column:1;grid-row:2;}        /* terminus/next — left middle */
+body.ls-active #s-drive .vim-content>div:nth-child(5){grid-column:2;grid-row:1;}        /* donation — top middle */
+body.ls-active #s-drive .vim-content>div:nth-child(6){grid-column:3;grid-row:1/3;flex-direction:column;} /* speed+alt stacked vertically */
+body.ls-active #s-drive .vim-content>div:nth-child(7){grid-column:3;grid-row:3;}        /* battery */
+body.ls-active #dl-clock{font-size:38px;line-height:1.1;}
+body.ls-active #dl-date{font-size:12px;}
+/* deviation label close to stop name in landscape */
+body.ls-active .vim-stop-row{justify-content:flex-start !important;gap:60px;}
+
+/* ── LANDSCAPE — other live screens ── */
+
+/* Blue header: compact height in landscape */
+body.ls-active .blue-hdr{padding:8px 14px;}
+body.ls-active .blue-hdr .val{font-size:14px;}
+body.ls-active .blue-hdr .lbl{font-size:9px;}
+
+/* Back buttons: thinner in landscape */
+body.ls-active .btn-back-live{padding:6px 14px;}
+body.ls-active .btn-boxed-back{padding:7px 14px;margin-top:4px;margin-bottom:4px;}
+
+/* Welcome screen: compact header */
+body.ls-active #s-welcome>div:first-child{padding:8px 16px;}
+body.ls-active #s-welcome #w-time{font-size:18px;margin-top:2px;}
+body.ls-active #s-welcome #w-date{font-size:11px;margin-top:0;}
+
+/* Numpad screens (driver number, PIN): display left, buttons right */
+body.ls-active .npwrap{flex-direction:row;padding:12px 16px;gap:16px;align-items:stretch;}
+body.ls-active .ndisp{flex:1;margin-bottom:0;min-height:0;}
+body.ls-active .npgrid{flex:0 0 204px;}
+body.ls-active .npgrid button{padding:9px 8px;font-size:22px;border-radius:10px;}
+
+/* Dead run / Break: clock left, info right */
+body.ls-active .ls-status-body{
+  display:grid;
+  grid-template-columns:160px 1fr;
+  grid-template-rows:1fr auto;
+  gap:10px 16px;
+  padding:12px 16px;
+  align-items:center;
+}
+body.ls-active .ls-status-body>*:nth-child(1){grid-column:1;grid-row:1;align-self:end;text-align:center;font-size:38px;}
+body.ls-active .ls-status-body>*:nth-child(2){grid-column:1;grid-row:2;align-self:start;text-align:center;}
+body.ls-active .ls-status-body>*:nth-child(3){grid-column:2;grid-row:1/3;align-self:center;width:auto;}
+body.ls-active .ls-dr-boxes{flex-direction:row;}
